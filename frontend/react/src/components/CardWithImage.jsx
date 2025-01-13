@@ -49,6 +49,7 @@ export default function CardWithImage({customer}) {
                         <Heading fontSize={'2xl'} fontWeight={500} fontFamily={'body'}>
                             {customer.name}
                         </Heading>
+
                         <Text color={'gray.500'}>{customer.email}</Text>
                         <Text color={'blue.200'}>{customer.age}</Text>
                     </Stack>

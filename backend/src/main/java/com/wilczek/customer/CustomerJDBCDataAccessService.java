@@ -20,7 +20,7 @@ public class CustomerJDBCDataAccessService implements CustomerDAO {
     @Override
     public List<Customer> selectAllCustomers() {
         String sql = """
-                SELECT id,name,email,age
+                SELECT id,name,email,password,age,gender
                 FROM customer
                 """;
 //        RowMapper<Customer> customerRowMapper = (rs, rowNum) -> {
@@ -39,7 +39,7 @@ public class CustomerJDBCDataAccessService implements CustomerDAO {
     @Override
     public Optional<Customer> selectCustomerById(Long id) {
         String sql = """
-                SELECT id,name,email,age
+                SELECT id,name,email,password,age,gender
                 FROM customer
                 WHERE id=?
                 """;
@@ -51,14 +51,16 @@ public class CustomerJDBCDataAccessService implements CustomerDAO {
     @Override
     public void insertCustomer(Customer customer) {
         var sql = """
-                INSERT INTO customer(name,email,age)
-                VALUES(?,?,?)
+                INSERT INTO customer(name,email,password,age,gender)
+                VALUES(?,?,?,?,?)
                 """;
         int result = jdbcTemplate.update(
                 sql,
                 customer.getName(),
                 customer.getEmail(),
-                customer.getAge()
+                customer.getPassword(),
+                customer.getAge(),
+                customer.getGender().name()
         );
         System.out.println("JDBC template: " + result);
     }
@@ -87,6 +89,16 @@ public class CustomerJDBCDataAccessService implements CustomerDAO {
             change = true;
             String sql = "UPDATE customer SET age=? WHERE id=?";
             jdbcTemplate.update(sql,customer.getAge(),customer.getId());
+        }
+        if (customer.getGender() != null){
+            change = true;
+            String sql = "UPDATE customer SET gender=? WHERE id=?";
+            jdbcTemplate.update(sql,customer.getGender().name(),customer.getId());
+        }
+        if (customer.getPassword() != null){
+            change = true;
+            String sql = "UPDATE customer SET password=? WHERE id=?";
+            jdbcTemplate.update(sql,customer.getPassword(),customer.getId());
         }
 
         if (!change){

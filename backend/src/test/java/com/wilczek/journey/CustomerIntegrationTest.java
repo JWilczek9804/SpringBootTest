@@ -4,6 +4,7 @@ import com.github.javafaker.Faker;
 import com.wilczek.customer.Customer;
 import com.wilczek.customer.CustomerRegistrationRequest;
 import com.wilczek.customer.CustomerUpdateRequest;
+import com.wilczek.customer.Gender;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,11 +33,14 @@ public class CustomerIntegrationTest {
         String name = faker.name().fullName();
         String email = faker.internet().safeEmailAddress();
         int age = faker.random().nextInt(20, 100);
+        Gender gender = age % 2 == 0 ? Gender.MALE : Gender.FEMALE;
+
         // create registration request
         CustomerRegistrationRequest request = new CustomerRegistrationRequest(
                 name,
                 email,
-                age
+                age,
+                gender
         );
         // get a post request
         webTestClient
@@ -68,7 +72,7 @@ public class CustomerIntegrationTest {
                 .orElseThrow();
         System.out.println(id);
 
-        Customer expectedCustomer = new Customer(id,name, email, age);
+        Customer expectedCustomer = new Customer(id,name, email, "password", age, Gender.MALE);
         // make sure that customer is present
         assertThat(responseBody)
                 .contains(expectedCustomer);
@@ -91,11 +95,13 @@ public class CustomerIntegrationTest {
         String name = faker.name().fullName();
         String email = faker.internet().safeEmailAddress();
         int age = faker.random().nextInt(20, 100);
+        Gender gender = age % 2 == 0 ? Gender.MALE : Gender.FEMALE;
         // create registration request
         CustomerRegistrationRequest request = new CustomerRegistrationRequest(
                 name,
                 email,
-                age
+                age,
+                gender
         );
         // get a post request
         webTestClient
@@ -119,7 +125,7 @@ public class CustomerIntegrationTest {
                 })
                 .returnResult()
                 .getResponseBody();
-        Customer expectedCustomer = new Customer(name, email, age);
+        Customer expectedCustomer = new Customer(name, email, "password", age, Gender.MALE);
         long id = allCustomers
                 .stream()
                 .filter(c -> c.getEmail().equals(email))
@@ -156,11 +162,14 @@ public class CustomerIntegrationTest {
         String name = faker.name().fullName();
         String email = faker.internet().safeEmailAddress();
         int age = faker.random().nextInt(20, 100);
-        // create registration request
+        Gender gender = age % 2 == 0 ? Gender.MALE : Gender.FEMALE;
+
+                // create registration request
         CustomerRegistrationRequest request = new CustomerRegistrationRequest(
                 name,
                 email,
-                age
+                age,
+                gender
         );
         // get a post request
         webTestClient
@@ -184,7 +193,7 @@ public class CustomerIntegrationTest {
                 })
                 .returnResult()
                 .getResponseBody();
-        Customer expectedCustomer = new Customer(name, email, age);
+        Customer expectedCustomer = new Customer(name, email, "password", age, gender);
         // make sure that customer is present
         assertThat(responseBody)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id")
@@ -199,7 +208,7 @@ public class CustomerIntegrationTest {
                 .orElseThrow();
         System.out.println(id);
         CustomerUpdateRequest updateRequest =
-                new CustomerUpdateRequest("Test", email, age);
+                new CustomerUpdateRequest("Test", email, age, gender);
         // update Customer
         webTestClient
                 .put()
@@ -228,5 +237,6 @@ public class CustomerIntegrationTest {
         assertThat(updatedCustomer.getName()).isEqualTo(updateRequest.name());
         assertThat(updatedCustomer.getEmail()).isEqualTo(updateRequest.email());
         assertThat(updatedCustomer.getAge()).isEqualTo(updateRequest.age());
+        assertThat(updatedCustomer.getGender()).isEqualTo(updateRequest.gender());
     }
 }

@@ -1,5 +1,8 @@
+com\wilczek\customer\Gender.class
 com\wilczek\customer\CustomerDAO.class
+com\wilczek\PingPongController$PingPong.class
 com\wilczek\customer\CustomerUpdateRequest.class
+com\wilczek\PingPongController.class
 com\wilczek\customer\CustomerRegistrationRequest.class
 com\wilczek\Main.class
 com\wilczek\customer\CustomerJDBCDataAccessService.class
@@ -13,3 +16,4 @@ com\wilczek\exceptions\DuplicateResourceException.class
 com\wilczek\customer\CustomerJPADataAccessService.class
 com\wilczek\exceptions\ResourceNotFoundException.class
 com\wilczek\customer\Customer.class
+com\wilczek\services\WebMvcConfig.class

@@ -163,8 +163,34 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestContainers {
         assertThat(actual).isPresent().hasValueSatisfying(v ->{
            assertThat(v.getId()).isEqualTo(id);
            assertThat(v.getEmail()).isEqualTo(newEmail); // change
+           assertThat(v.getPassword()).isEqualTo(customer.getPassword());
            assertThat(v.getName()).isEqualTo(customer.getName());
            assertThat(v.getAge()).isEqualTo(customer.getAge());
+        });
+    }
+
+    @Test
+    void updateCustomerPassword() {
+        // Given
+        Customer customer = createCustomer();
+        underTest.insertCustomer(customer);
+
+        String newPassword = FAKER.internet().password();
+        Long id = getId(customer);
+        // When
+        Customer update = new Customer();
+        update.setId(id);
+        update.setPassword(newPassword);
+        underTest.updateCustomer(update);
+
+        Optional<Customer> actual = underTest.selectCustomerById(id);
+        // Then
+        assertThat(actual).isPresent().hasValueSatisfying(v ->{
+            assertThat(v.getId()).isEqualTo(id);
+            assertThat(v.getEmail()).isEqualTo(customer.getEmail()); // change
+            assertThat(v.getPassword()).isEqualTo(newPassword);
+            assertThat(v.getName()).isEqualTo(customer.getName());
+            assertThat(v.getAge()).isEqualTo(customer.getAge());
         });
     }
 
@@ -203,13 +229,23 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestContainers {
 
         Long id = getId(customer);
         // When
-        Customer update = createCustomer();
+        Customer update = new Customer();
         update.setId(id);
+        update.setName("foo");
+        String email = UUID.randomUUID().toString();
+        update.setEmail(email);
+        update.setAge(22);
 
         underTest.updateCustomer(update);
         Optional<Customer> actual = underTest.selectCustomerById(id);
         // Then
-        assertThat(actual).isPresent().hasValue(update);
+        assertThat(actual).isPresent().hasValueSatisfying(updated -> {
+            assertThat(updated.getId()).isEqualTo(id);
+            assertThat(updated.getGender()).isEqualTo(Gender.MALE);
+            assertThat(updated.getName()).isEqualTo("foo");
+            assertThat(updated.getEmail()).isEqualTo(email);
+            assertThat(updated.getAge()).isEqualTo(22);
+        });
 
         System.out.println();
     }

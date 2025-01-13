@@ -3,6 +3,7 @@ import com.github.javafaker.Faker;
 import com.github.javafaker.Name;
 import com.wilczek.customer.Customer;
 import com.wilczek.customer.CustomerRepository;
+import com.wilczek.customer.Gender;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,10 +24,12 @@ public class Main {
             Name name = faker.name();
             String firstName = name.firstName();
             String lastName = name.lastName();
+            int age = new Random().nextInt(20, 50);
+            Gender gender = age % 2 == 0 ? Gender.MALE : Gender.FEMALE;
             Customer customer = new Customer(
                     firstName + " " + lastName,
                     "%s.%s@gmail.com".formatted(firstName.toLowerCase(), lastName.toLowerCase()),
-                    new Random().nextInt(20,50));
+                    "password", age, gender);
             customerRepository.save(customer);
         };
     }

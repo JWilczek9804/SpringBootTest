@@ -2,9 +2,9 @@ package com.wilczek;
 
 import com.github.javafaker.Faker;
 import com.wilczek.customer.Customer;
+import com.wilczek.customer.Gender;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -87,8 +87,9 @@ public abstract class AbstractTestContainers {
         return new Customer(
                 FAKER.name().fullName(),
                 createEmail(),
-                new Random().nextInt(30,99)
-        );
+                "password",
+                new Random().nextInt(30,99),
+                Gender.MALE);
     }
 
 

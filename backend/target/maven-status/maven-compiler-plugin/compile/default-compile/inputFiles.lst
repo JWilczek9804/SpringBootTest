@@ -1,5 +1,7 @@
+C:\Users\dell\Documents\spring-boot-example\backend\src\main\java\com\wilczek\customer\Gender.java
 C:\Users\dell\Documents\spring-boot-example\backend\src\main\java\com\wilczek\customer\CustomerListDataAccessService.java
 C:\Users\dell\Documents\spring-boot-example\backend\src\main\java\com\wilczek\customer\CustomerRowMapper.java
+C:\Users\dell\Documents\spring-boot-example\backend\src\main\java\com\wilczek\PingPongController.java
 C:\Users\dell\Documents\spring-boot-example\backend\src\main\java\com\wilczek\customer\CustomerService.java
 C:\Users\dell\Documents\spring-boot-example\backend\src\main\java\com\wilczek\customer\CustomerController.java
 C:\Users\dell\Documents\spring-boot-example\backend\src\main\java\com\wilczek\exceptions\DuplicateResourceException.java
@@ -13,4 +15,4 @@ C:\Users\dell\Documents\spring-boot-example\backend\src\main\java\com\wilczek\Ma
 C:\Users\dell\Documents\spring-boot-example\backend\src\main\java\com\wilczek\customer\CustomerDAO.java
 C:\Users\dell\Documents\spring-boot-example\backend\src\main\java\com\wilczek\customer\CustomerJDBCDataAccessService.java
 C:\Users\dell\Documents\spring-boot-example\backend\src\main\java\com\wilczek\customer\CustomerRegistrationRequest.java
-C:\Users\dell\Documents\spring-boot-example\backend\src\main\java\com\wilczek\FooService.java
+C:\Users\dell\Documents\spring-boot-example\backend\src\main\java\com\wilczek\services\WebMvcConfig.java

@@ -29,10 +29,11 @@ public class CustomerService {
         String email = customerRegistrationRequest.email();
         String name = customerRegistrationRequest.name();
         Integer age = customerRegistrationRequest.age();
+        Gender gender = customerRegistrationRequest.gender();
         if (customerDAO.existPersonWithEmail(email)) {
             throw new DuplicateResourceException("Email [%s] is already taken".formatted(email));
         }
-            Customer customer = new Customer(name, email, age);
+            Customer customer = new Customer(name, email, "password", age, gender);
             customerDAO.insertCustomer(customer);
     }
     public void deleteCustomer(Long id){
@@ -68,6 +69,10 @@ public class CustomerService {
                 );
             }
             customer.setEmail(updateRequest.email());
+            changes = true;
+        }
+        if (updateRequest.gender() != null && !updateRequest.gender().equals(customer.getGender())) {
+            customer.setGender(updateRequest.gender());
             changes = true;
         }
 

@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.wilczek.customer.CustomerJDBCDataAccessServiceTest
--------------------------------------------------------------------------------
-Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.702 s -- in com.wilczek.customer.CustomerJDBCDataAccessServiceTest

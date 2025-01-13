@@ -74,7 +74,8 @@ class CustomerServiceTest extends AbstractTestContainers {
         CustomerRegistrationRequest request = new CustomerRegistrationRequest(
                 "Jamal",
                 email,
-                33
+                33,
+                Gender.MALE
         );
         // When
         underTest.addCustomer(request);
@@ -87,6 +88,7 @@ class CustomerServiceTest extends AbstractTestContainers {
         assertThat(capturedCustomer.getName()).isEqualTo(request.name());
         assertThat(capturedCustomer.getEmail()).isEqualTo(request.email());
         assertThat(capturedCustomer.getAge()).isEqualTo(request.age());
+        assertThat(capturedCustomer.getGender()).isEqualTo(request.gender());
     }
 
     @Test
@@ -96,7 +98,8 @@ class CustomerServiceTest extends AbstractTestContainers {
         CustomerRegistrationRequest request = new CustomerRegistrationRequest(
                 "Jamal",
                 email,
-                33
+                33,
+                Gender.MALE
         );
         Mockito.when(customerDAO.existPersonWithEmail(email)).thenReturn(true);
         // When
@@ -142,7 +145,8 @@ class CustomerServiceTest extends AbstractTestContainers {
         CustomerUpdateRequest updateRequest = new CustomerUpdateRequest(
                 "James",
                 "JamesOrton@cpk.pl",
-                40
+                40,
+                Gender.MALE
         );
         // When
         Mockito.when(customerDAO.existPersonWithEmail(updateRequest.email())).thenReturn(false);
@@ -157,6 +161,7 @@ class CustomerServiceTest extends AbstractTestContainers {
         assertThat(capturedCustomer.getName()).isEqualTo(updateRequest.name());
         assertThat(capturedCustomer.getEmail()).isEqualTo(updateRequest.email());
         assertThat(capturedCustomer.getAge()).isEqualTo(updateRequest.age());
+        assertThat(capturedCustomer.getGender()).isEqualTo(updateRequest.gender());
 
     }
 
@@ -172,7 +177,8 @@ class CustomerServiceTest extends AbstractTestContainers {
         CustomerUpdateRequest update = new CustomerUpdateRequest(
                 updatedName,
                 customer.getEmail(),
-                customer.getAge()
+                customer.getAge(),
+                customer.getGender()
         );
 
         // When
@@ -186,6 +192,8 @@ class CustomerServiceTest extends AbstractTestContainers {
         assertThat(capturedCustomer.getName()).isEqualTo(update.name());
         assertThat(capturedCustomer.getEmail()).isEqualTo(customer.getEmail());
         assertThat(capturedCustomer.getAge()).isEqualTo(customer.getAge());
+        assertThat(capturedCustomer.getGender()).isEqualTo(customer.getGender());
+
     }
 
     @Test
@@ -200,7 +208,8 @@ class CustomerServiceTest extends AbstractTestContainers {
         CustomerUpdateRequest update = new CustomerUpdateRequest(
                 customer.getName(),
                 updatedEmail,
-                customer.getAge()
+                customer.getAge(),
+                customer.getGender()
         );
 
         // When
@@ -214,6 +223,7 @@ class CustomerServiceTest extends AbstractTestContainers {
         assertThat(capturedCustomer.getName()).isEqualTo(customer.getName());
         assertThat(capturedCustomer.getEmail()).isEqualTo(update.email());
         assertThat(capturedCustomer.getAge()).isEqualTo(customer.getAge());
+        assertThat(capturedCustomer.getGender()).isEqualTo(customer.getGender());
     }
 
     @Test
@@ -229,7 +239,8 @@ class CustomerServiceTest extends AbstractTestContainers {
         CustomerUpdateRequest update = new CustomerUpdateRequest(
                 customer.getName(),
                 customer.getEmail(),
-                updatedAge
+                updatedAge,
+                customer.getGender()
         );
 
         // When
@@ -244,6 +255,39 @@ class CustomerServiceTest extends AbstractTestContainers {
         assertThat(capturedCustomer.getName()).isEqualTo(customer.getName());
         assertThat(capturedCustomer.getEmail()).isEqualTo(customer.getEmail());
         assertThat(capturedCustomer.getAge()).isEqualTo(update.age());
+        assertThat(capturedCustomer.getGender()).isEqualTo(customer.getGender());
+    }
+
+    @Test
+    void updateCustomerGender() {
+        // Given
+        Long id = 1L;
+        Gender updatedGender = Gender.FEMALE;
+        Customer customer = createCustomer();
+        customer.setId(id);
+        System.out.println(customer);
+        Mockito.when(customerDAO.selectCustomerById(id)).thenReturn(Optional.of(customer));
+
+        CustomerUpdateRequest update = new CustomerUpdateRequest(
+                customer.getName(),
+                customer.getEmail(),
+                customer.getAge(),
+                updatedGender
+        );
+
+        // When
+        underTest.updateCustomer(id,update);
+        // Then
+        ArgumentCaptor<Customer> customerArgumentCaptor = ArgumentCaptor.forClass(Customer.class);
+        Mockito.verify(customerDAO).updateCustomer(customerArgumentCaptor.capture());
+        Customer capturedCustomer = customerArgumentCaptor.getValue();
+        System.out.println(capturedCustomer);
+
+        assertThat(capturedCustomer.getId()).isEqualTo(customer.getId());
+        assertThat(capturedCustomer.getName()).isEqualTo(customer.getName());
+        assertThat(capturedCustomer.getEmail()).isEqualTo(customer.getEmail());
+        assertThat(capturedCustomer.getAge()).isEqualTo(update.age());
+        assertThat(capturedCustomer.getGender()).isEqualTo(customer.getGender());
     }
 
     @Test
@@ -254,7 +298,8 @@ class CustomerServiceTest extends AbstractTestContainers {
         CustomerUpdateRequest update = new CustomerUpdateRequest(
                 "Jonas",
                 "Jonas@cpk.pl",
-                33
+                33,
+                Gender.MALE
         );
         // When
         assertThatThrownBy(()-> underTest.updateCustomer(id,update))
@@ -277,7 +322,8 @@ class CustomerServiceTest extends AbstractTestContainers {
         CustomerUpdateRequest update = new CustomerUpdateRequest(
                 customer.getName(),
                 email,
-                customer.getAge()
+                customer.getAge(),
+                customer.getGender()
         );
         // When
         assertThatThrownBy(()-> underTest.updateCustomer(id,update))
@@ -295,7 +341,8 @@ class CustomerServiceTest extends AbstractTestContainers {
         CustomerUpdateRequest update = new CustomerUpdateRequest(
                 customer.getName(),
                 customer.getEmail(),
-                customer.getAge()
+                customer.getAge(),
+                customer.getGender()
         );
         Mockito.when(customerDAO.selectCustomerById(id)).thenReturn(Optional.of(customer));
         // When

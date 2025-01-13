@@ -1,5 +1,8 @@
 package com.wilczek.customer;
 
+import com.wilczek.jwt.JWTUtil;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -7,9 +10,11 @@ import java.util.List;
 @RequestMapping("api/v1/customers")
 public class CustomerController {
     private final CustomerService customerService;
+    private final JWTUtil jwtUtil;
 
-    public CustomerController(CustomerService customerService) {
+    public CustomerController(CustomerService customerService, JWTUtil jwtUtil) {
         this.customerService = customerService;
+        this.jwtUtil = jwtUtil;
     }
 
     @GetMapping
@@ -22,22 +27,29 @@ public class CustomerController {
         return customerService.getCustomerById(idCustomer);
     }
     @PostMapping
-    public void registerCustomer(
+    public ResponseEntity<?> registerCustomer(
             @RequestBody CustomerRegistrationRequest request){
         customerService.addCustomer(request);
+        String jwtToken = jwtUtil.issueToken(request.email(), "ROLE_USER");
+        ResponseEntity<Object> buildedToken = ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
+                .build();
+        return buildedToken;
+        // Sposób wysłania tokenu do klienta
     }
 
     @DeleteMapping(path = "{idCustomer}")
     public void deleteCustomer(@PathVariable(value = "idCustomer") Long id){
         customerService.deleteCustomer(id);
     }
-    
+
     @PutMapping("{idCustomer}")
     public void updateCustomer(
             @PathVariable(value = "idCustomer") Long id,
             @RequestBody CustomerUpdateRequest request){
         customerService.updateCustomer(id,request);
     }
+
 //    @PostMapping
 //    public void registerCustomer(
 //            @RequestParam(value = "name", required = false) String name,

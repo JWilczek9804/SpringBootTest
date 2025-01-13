@@ -1,6 +1,6 @@
 package com.wilczek.customer;
 
 public record CustomerRegistrationRequest
-        (String name,String email, Integer age) {
+        (String name,String email, Integer age, Gender gender) {
 
 }
